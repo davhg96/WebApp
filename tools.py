@@ -1,12 +1,12 @@
-import pygal
-
+from matplotlib import pyplot as plt
+plt.style.use('ggplot')
 
 def parse_fasta_to_dict(FASTA_file):
 	seq_dict = {}
 	nt = ''
 	idline = ''
 	with open(FASTA_file, 'r') as fin:  # Read the input file
-		for line in f:
+		for line in fin:
 			if line.startswith('>'):  # Save the sequences in a dictionary,
 				if nt:
 					seq_dict[idline] = nt
@@ -54,40 +54,57 @@ def oneline_fasta(FASTA_file, fileout):
 		print('{}\n{}'.format(idline, nt), file=fout)
 
 
-def plot_nucleotides(fastasequence, windowsize=100, step=50):
+def plot_nucleotides(fastasequence, windowsize=100, step=50, GC=False):
 	'''
 	This function takes a fasta sequence, joins all the sequences into 1 and slides a window over it and counts %
-	Nucleotides across the window and plots it
+	Nucleotides across the window and plots it, Added functionality to choose if the user want s GC% or overall N freqs.
 	'''
 	sequence_dict = parse_fasta_to_dict(fastasequence)
-	nucleotides = 'ACTGN'  # Just so we can have everything in 1 dict
+
+	if GC:
+		nucleotides='CGN'
+	else:
+		nucleotides = 'ACTGN'  # Just so we can have everything in 1 dict
+
+
 	nuc = {'A': [], 'C': [], 'T': [], 'G': [], 'N': [], 'midle_pos': []}
 
 	allN = []
 	for key in sequence_dict:  # this part takes the dictionary and makes it a string
 		allN.append(sequence_dict[key])
 	allN = ''.join(allN)
-
 	upper_window = windowsize
 	lower_window = 0
-	while upper_window < len(allN):  # Count the nucleotides and append them alongside the windos into de dict list
+	while upper_window <= len(allN):  # Count the nucleotides and append them alongside the windos into de dict list
 		working_seq = allN[lower_window:upper_window]
 		for Nuc in nucleotides:
-			nuc[Nuc].append((working_seq.count(Nuc)/(upper_window-lower_window))*100)
-			nuc['midle_pos'].append(upper_window - step)
-		upper_window += step
+
+			nuc[Nuc].append((working_seq.count(Nuc) / (upper_window - lower_window)) * 100)
+			if (upper_window - step) not in nuc['midle_pos']:  # Check if the middle pso is already added,
+																# only add it if the previous is different
+				nuc['midle_pos'].append(upper_window - step)
+		upper_window += step  # move the window
 		lower_window += step
-	working_seq = allN[lower_window:]
-	for Nuc in nucleotides:
-		nuc[Nuc].append((working_seq.count(Nuc)/(upper_window-lower_window))*100)
-		nuc['midle_pos'].append(upper_window - step)
 
-	line_chart = pygal.Line()  # Lets plot
-	line_chart.title = 'Nucleotide % across the file'
-	line_chart.x_labels = nuc['midle_pos']
+	working_seq = allN[lower_window:] # Take the end if th ewindow falls over the edge
 	for Nuc in nucleotides:
-		line_chart.add(Nuc, nuc[Nuc])
-	line_chart.render()
+		nuc[Nuc].append((working_seq.count(Nuc) / (len(allN) - lower_window)) * 100)
+		if (lower_window + (len(working_seq)/2)) not in nuc['midle_pos']:  # Check if the middle pso is already
+																		# added, only add it if the  previous is different
+			nuc['midle_pos'].append(lower_window + (len(working_seq)/2))
 
-with open('gc.txt','r') as fin:
-	plot_nucleotides(fin)
+
+	for Nuc in nucleotides:
+		if not any(nuc[Nuc])==0: #Check if there are values, if not ignore that nucleotide
+			plt.plot(nuc['midle_pos'], nuc[Nuc], label=Nuc)
+
+	plt.title('Nucleotide abundance in Fasta file')
+	plt.xlabel('Window middle position')
+	plt.ylabel('Nucleotide abundance (%)')
+	plt.legend()
+
+	plt.savefig('test')
+	return
+
+
+
