@@ -18,9 +18,9 @@ def tools():
 def fastqToFasta():
     return render_template('fastqToFasta.html')
 
-@app.route('/tools/NucleotidePlots/')
-def NucleotidePlots():
-    return render_template('NucleotidePlots.html/')
+@app.route('/tools/Nplots/')
+def Nplots():
+    return render_template('Nplots.html')
 
 @app.route('/tools/MultilineFasta/')
 def MultilineFasta():
