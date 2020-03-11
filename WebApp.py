@@ -1,6 +1,6 @@
 
 from flask import Flask, render_template, url_for
-#import tools
+import MyWebTools
 
 app = Flask(__name__)
 
@@ -13,6 +13,22 @@ def home():
 @app.route('/tools')
 def tools():
     return render_template('tools.html')
+
+@app.route('/tools/fastqToFasta/')
+def fastqToFasta():
+    return render_template('fastqToFasta.html')
+
+@app.route('/tools/NucleotidePlots/')
+def NucleotidePlots():
+    return render_template('NucleotidePlots.html/')
+
+@app.route('/tools/MultilineFasta/')
+def MultilineFasta():
+    return render_template('MultilineFasta.html')
+
+
+
+
 
 @app.route('/contact')
 def contact():

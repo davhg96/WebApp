@@ -1,26 +1,23 @@
 {% extends "layout.html"%}
 {% block content %}
         <h1> Tools </h1>
+        <em>This is the tools tab, here you can find the different tools available</em>
+
+
 {% endblock content %}
 
-<main role="main" class="container"> <!--Sidebar code-->
-  <div class="row">
-    <div class="col-md-8">
 
-    </div>
-    <div class="col-md-4">
+{% block side %}
       <div class="content-section">
-        <h3>Our Sidebar</h3>
-        <p class='text-muted'>You can put any information here you'd like.
+        <h2>Available Tools</h2>
+        <p class='text-muted'>
           <div class="list-group">
-            <a class="list-group-item list-group-item-light" href="/home" >Home </a>
-            <a class="list-group-item list-group-item-light" href="/tools" >Tools</a>
-            <a class="list-group-item list-group-item-light" href="/contact" >Contact</a>
+            <a class="list-group-item list-group-item-light" href="/tools/fastqToFasta" >FastQ to FASTA</a>
+            <a class="list-group-item list-group-item-light" href="/tools/NucelotidePlots" >Nucleotide plots</a>
+            <a class="list-group-item list-group-item-light" href="/tools/MultilineFasta" >Multiline to One line Fasta</a>
             <a class="list-group-item list-group-item-light" href="/about" >About </a>
             <a class="list-group-item list-group-item-light" href="/references" >References</a>
           </div>
         </p>
-      </div>
-    </div>
-  </div>
-</main> <!--Sidebar code-->
+      </div>>
+{% endblock side %}
