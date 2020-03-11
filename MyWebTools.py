@@ -1,6 +1,7 @@
 from matplotlib import pyplot as plt
-plt.style.use('ggplot')
+import os
 
+plt.style.use('ggplot')
 def parse_fasta_to_dict(FASTA_file):
 	seq_dict = {}
 	nt = []
@@ -146,6 +147,4 @@ def plot_nucleotides(fastasequence, windowsize=100, step=50, GC=False):
 
 		plt.savefig('test')
 		return
-
-plot_nucleotides('test.txt')
 
