@@ -37,7 +37,7 @@ def fastq_to_fasta(fastq_file, fasta_file):
 				seq = line
 			if counter % 4 == 0:
 				print('{}\n{}'.format(idcode, seq), file=f_out)
-
+		return 'done'
 
 def oneline_fasta(FASTA_file, fileout):
 	'''

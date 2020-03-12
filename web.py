@@ -1,12 +1,12 @@
 
-from flask import Flask, render_template, url_for, request, flash, redirect
+from flask import Flask, render_template, url_for, request, flash, redirect,send_from_directory, abort
 import os
 from werkzeug.utils import secure_filename
-import MyWebTools
+import MyWebTools as MWT
 
 
 UPLOAD_FOLDER ='/mnt/e/Pycharm_projects/WebApp/input'
-DOWNLOAD_FOLDER='resultado'
+DOWNLOAD_FOLDER='/mnt/e/Pycharm_projects/WebApp/output'
 ALLOWED_EXTENSIONS_FASTQ = {'fastq'}
 ALLOWED_EXTENSIONS_FASTA={'fasta','fna','fa'}
 
@@ -40,10 +40,7 @@ def tools():
 
 @app.route('/tools/fastqToFasta/', methods=['GET','POST'])
 
-# def fastqToFasta():
-#     return render_template('fastqToFasta.html')
-
-def upload_file():
+def form():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -59,8 +56,18 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('File successfully uploaded')
-            return redirect(url_for('upload_file', filename=filename))
+
+            return process_fastq(filename) #Process the file
+
     return render_template('fastqToFasta.html')
+
+
+def process_fastq(filename):
+    processed_filename = filename.rsplit('.', 1)[0] + '.fasta'  # Rename the processed file
+    MWT.fastq_to_fasta(os.path.join(app.config['UPLOAD_FOLDER'], filename) # Process the file and output in the
+                       , os.path.join(app.config['DOWNLOAD_FOLDER'], processed_filename))# downloads folder
+    return send_from_directory(app.config['DOWNLOAD_FOLDER'], filename=processed_filename,
+                               as_attachment=True)
 
 
 @app.route('/tools/Nplots/', methods=['GET','POST'])
