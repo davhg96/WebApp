@@ -53,7 +53,7 @@ def oneline_fasta(FASTA_file, fileout):
 					nt=''.join(nt)
 					print('{}\n{}'.format(idline, nt), file=fout)
 				idline = line.rstrip()  # taking away the newlines
-				idline = idline.lstrip('>')
+
 				nt = []
 			if not line.startswith('>'):
 				sequence = line.rstrip().rstrip('\n').upper()
