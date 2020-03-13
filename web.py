@@ -17,7 +17,7 @@ except:
 
 
 UPLOAD_FOLDER =os.path.join(os.path.dirname(os.path.abspath(__file__)),'input_folder')
-DOWNLOAD_FOLDER=os.path.join(os.path.dirname(os.path.abspath(__file__)),'./static/output_folder')
+DOWNLOAD_FOLDER=os.path.join(os.path.dirname(os.path.abspath(__file__)),'./static')
 ALLOWED_EXTENSIONS_FASTQ = {'fastq'}
 ALLOWED_EXTENSIONS_FASTA={'fasta','fna','fa'}
 
@@ -126,10 +126,13 @@ def plot_fasta(filename, window_values, type):
                                  filename=filename, windowsize=window_values[0], step=window_values[1], \
                                  GC=False, out_dir_name=app.config['DOWNLOAD_FOLDER'])
 
+    img_ls=get_images()
 
-    return render_template('plot_show.html',folder=app.config['DOWNLOAD_FOLDER'], images=get_images(), title='Results')
 
+    return render_template('plot_show.html', folder=app.config['DOWNLOAD_FOLDER'], images=img_ls, title='Results')#, clean(img_ls)
 
+def clean(img_ls):
+    for n in range(len(img_ls)): os.remove(os.path.join(app.config['DOWNLOAD_FOLDER'], img_ls[n]))
 
 @app.route('/tools/MultilineFasta/', methods=['GET','POST'])
 def MultilineFasta():
