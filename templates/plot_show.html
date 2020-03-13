@@ -2,8 +2,22 @@
 {% block content %}
         <h1> Nucleotide Plots </h1>
 
-{% endblock content %}
+{% if images %}
+        <table>
+            <tbody>
+            {% for img_name in images %}
+                    <tr>
 
+                    <td><img src="/static/output_folder/{{img_name}}" alt="{{ img_name }}"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        No results :(
+    {% endif %}
+
+{% endblock content %}
 
 {% block side %}
 <div class="content-section">

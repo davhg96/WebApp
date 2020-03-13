@@ -99,13 +99,12 @@ def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, 
 			if not any(nuc[Nuc]) == 0:  # Check if there are values, if not ignore that nucleotide
 				plt.plot(nuc['midle_pos'], nuc[Nuc], label=Nuc)
 
-		plt.title('GC%' + filename)
+		plt.title('GC% ' + filename)
 		plt.xlabel('Window middle position')
 		plt.ylabel('GC%')
 		plt.legend()
 
-		plt.savefig(os.path.join(out_dir_name, filename + '_GC.png'))
-		return
+		return plt.savefig(os.path.join(out_dir_name, filename + '_GC.png')),plt.close()
 	# General plot code, similar to the GC code but changes the dictionary
 	else:
 		nucleotides = 'ACTGN'  # Just so we can have everything in 1 dict
@@ -145,6 +144,6 @@ def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, 
 		plt.ylabel('Nucleotide abundance (%)')
 		plt.legend()
 
-		plt.savefig(os.path.join(out_dir_name, filename + '_allN.png'))
-		return
+
+		return plt.savefig(os.path.join(out_dir_name, filename + '_allN.png')),plt.close()
 

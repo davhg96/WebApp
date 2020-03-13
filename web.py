@@ -10,14 +10,14 @@ except:
     print('Failed to create input directory')  # if the directory already exist
     print('Probably it already exist')
 try:
-    os.mkdir('output_folder')  # make the directory to store all the new files
+    os.mkdir('./static/output_folder')  # make the directory to store all the new files
 except:
     print('Failed to create output directory')  # if the directory already exist
     print('Probably it already exist')
 
 
 UPLOAD_FOLDER =os.path.join(os.path.dirname(os.path.abspath(__file__)),'input_folder')
-DOWNLOAD_FOLDER=os.path.join(os.path.dirname(os.path.abspath(__file__)),'output_folder')
+DOWNLOAD_FOLDER=os.path.join(os.path.dirname(os.path.abspath(__file__)),'./static/output_folder')
 ALLOWED_EXTENSIONS_FASTQ = {'fastq'}
 ALLOWED_EXTENSIONS_FASTA={'fasta','fna','fa'}
 
@@ -103,8 +103,6 @@ def Nplots():
             window_dim=request.form.getlist('quantity') # get a list with the window dimensions, this returns a string
             window_dim=list(map(int,window_dim))
             plots=request.form.getlist('plot') # get a list with 1 and 0 for the plots
-            plots=list(map(int,plots))
-            plots = list(map(bool, plots))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('File successfully uploaded')
             return plot_fasta(filename, window_values=window_dim, type=plots)
@@ -113,13 +111,23 @@ def Nplots():
 
     return render_template('Nplots.html')
 
-def plot_fasta(filename, window_values, type):
-    for type in type:
-        MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename),\
-                    filename=filename, windowsize=window_values[0], step=window_values[1],\
-                    GC=type, out_dir_name=app.config['DOWNLOAD_FOLDER'])
+def get_images():
+    files=os.listdir(app.config['DOWNLOAD_FOLDER'])
+    return files
 
-    return
+def plot_fasta(filename, window_values, type):
+    for graph_type in type:
+        if graph_type=='gc':
+            MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename),\
+                    filename=filename, windowsize=window_values[0], step=window_values[1],\
+                    GC=True, out_dir_name=app.config['DOWNLOAD_FOLDER'])
+        else:
+            MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename), \
+                                 filename=filename, windowsize=window_values[0], step=window_values[1], \
+                                 GC=False, out_dir_name=app.config['DOWNLOAD_FOLDER'])
+
+
+    return render_template('plot_show.html',folder=app.config['DOWNLOAD_FOLDER'], images=get_images(), title='Results')
 
 
 
