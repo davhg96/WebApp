@@ -87,8 +87,39 @@ def process_fastq(filename):
 
 @app.route('/tools/Nplots/', methods=['GET','POST'])
 def Nplots():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename, fasta=True):
+            filename = secure_filename(file.filename)
+            window_dim=request.form.getlist('quantity') # get a list with the window dimensions, this returns a string
+            window_dim=list(map(int,window_dim))
+            plots=request.form.getlist('plot') # get a list with 1 and 0 for the plots
+            plots=list(map(int,plots))
+            plots = list(map(bool, plots))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash('File successfully uploaded')
+            return plot_fasta(filename, window_values=window_dim, type=plots)
+        else:
+            return render_template('ErrorPage.html')
+
     return render_template('Nplots.html')
 
+def plot_fasta(filename, window_values, type):
+    for type in type:
+        MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename),\
+                    filename=filename, windowsize=window_values[0], step=window_values[1],\
+                    GC=type, out_dir_name=app.config['DOWNLOAD_FOLDER'])
+
+    return
 
 
 

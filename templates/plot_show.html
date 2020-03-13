@@ -1,0 +1,21 @@
+{% extends "layout.html"%}
+{% block content %}
+        <h1> Nucleotide Plots </h1>
+
+{% endblock content %}
+
+
+{% block side %}
+<div class="content-section">
+        <h2>Available Tools</h2>
+        <p class='text-muted'>
+          <div class="list-group">
+            <a class="list-group-item list-group-item-light" href="/tools/fastqToFasta" >FastQ to FASTA</a>
+            <a class="list-group-item list-group-item-light" href="/tools/Nplots" >Nucleotide plots</a>
+            <a class="list-group-item list-group-item-light" href="/tools/MultilineFasta" >Multiline to One line Fasta</a>
+            <a class="list-group-item list-group-item-light" href="/about" >About </a>
+            <a class="list-group-item list-group-item-light" href="/references" >References</a>
+          </div>
+        </p>
+</div>
+{% endblock side %}

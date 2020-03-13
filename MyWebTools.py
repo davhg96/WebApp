@@ -62,7 +62,7 @@ def oneline_fasta(FASTA_file, fileout):
 		print('{}\n{}'.format(idline, nt), file=fout)
 
 
-def plot_nucleotides(fastasequence, windowsize=100, step=50, GC=False):
+def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, out_dir_name=os.path.abspath(os.getcwd())):
 	'''
 	This function takes a fasta sequence, joins all the sequences into 1 and slides a window over it and counts %
 	Nucleotides across the window and plots it, Added functionality to choose if the user want s GC% or overall N freqs.
@@ -99,12 +99,12 @@ def plot_nucleotides(fastasequence, windowsize=100, step=50, GC=False):
 			if not any(nuc[Nuc]) == 0:  # Check if there are values, if not ignore that nucleotide
 				plt.plot(nuc['midle_pos'], nuc[Nuc], label=Nuc)
 
-		plt.title('GC% in Fasta file')
+		plt.title('GC%' + filename)
 		plt.xlabel('Window middle position')
 		plt.ylabel('GC%')
 		plt.legend()
 
-		plt.savefig('test')
+		plt.savefig(os.path.join(out_dir_name, filename + '_GC.png'))
 		return
 	# General plot code, similar to the GC code but changes the dictionary
 	else:
@@ -140,11 +140,11 @@ def plot_nucleotides(fastasequence, windowsize=100, step=50, GC=False):
 			if not any(nuc[Nuc])==0: #Check if there are values, if not ignore that nucleotide
 				plt.plot(nuc['midle_pos'], nuc[Nuc], label=Nuc)
 
-		plt.title('Nucleotide abundance in Fasta file')
+		plt.title(filename + ' Nucleotide abundance')
 		plt.xlabel('Window middle position')
 		plt.ylabel('Nucleotide abundance (%)')
 		plt.legend()
 
-		plt.savefig('test')
+		plt.savefig(os.path.join(out_dir_name, filename + '_allN.png'))
 		return
 

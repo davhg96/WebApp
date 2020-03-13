@@ -4,7 +4,18 @@
 
 <form method=POST enctype=multipart/form-data>
       <input type='file' name='file'>
-      <input type=submit value=Upload>
+
+    <legend>Select the type of plot</legend>
+    <label class="checkbox">
+    <input type="checkbox" name="plot" value= "1"> Plot GC </label>
+    <label class="checkbox">
+    <input type="checkbox" name="plot" value= "0"> Plot All nucleotides</label>
+    <legend>Select windowsize and step</legend>
+    <label for="Wsize">Windowlength:</label>
+    <input type="number" id="Wsize" name="quantity" value="200" min="10">
+    <label for="Wstep">Window Step:</label>
+    <input type="number" id="Wstep" name="quantity" value="100" min="5">
+    <input type=submit value=Send>
     </form>
 {% endblock content %}
 

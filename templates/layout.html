@@ -40,6 +40,16 @@
   </nav>
 </header>
 
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 <main role="main" class="container"> <!--Sidebar code-->
   <div class="row">
     <div class="col12 col-md-8">
