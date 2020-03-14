@@ -2,13 +2,13 @@
 {% block content %}
         <h1> Nucleotide Plots </h1>
 
-{% if images %}
+     {% if image_names %}
         <table>
             <tbody>
-            {% for img_name in images %}
-                    <tr>
+            {% for img_name in image_names %}
+                <tr>
 
-                    <td><img src="/static/{{img_name}}" alt="{{ img_name }}"></td>
+                    <td><img src="{{url_for('send_image', filename=img_name)}}" alt=></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -16,6 +16,7 @@
     {% else %}
         No results :(
     {% endif %}
+
 
 {% endblock content %}
 

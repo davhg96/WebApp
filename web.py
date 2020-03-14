@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, url_for, request, flash, redirect,send_from_directory, abort
+from flask import Flask, render_template, url_for, request, flash, redirect,send_from_directory, send_file
 import os
 from werkzeug.utils import secure_filename
 import MyWebTools as MWT
@@ -10,14 +10,14 @@ except:
     print('Failed to create input directory')  # if the directory already exist
     print('Probably it already exist')
 try:
-    os.mkdir('./static/output_folder')  # make the directory to store all the new files
+    os.mkdir('output_folder')  # make the directory to store all the new files
 except:
     print('Failed to create output directory')  # if the directory already exist
     print('Probably it already exist')
 
 
 UPLOAD_FOLDER =os.path.join(os.path.dirname(os.path.abspath(__file__)),'input_folder')
-DOWNLOAD_FOLDER=os.path.join(os.path.dirname(os.path.abspath(__file__)),'./static')
+DOWNLOAD_FOLDER=os.path.join(os.path.dirname(os.path.abspath(__file__)),'output_folder')
 ALLOWED_EXTENSIONS_FASTQ = {'fastq'}
 ALLOWED_EXTENSIONS_FASTA={'fasta','fna','fa'}
 
@@ -36,6 +36,8 @@ def allowed_file(filename, fasta=True): # Check if the extension is correct
 
 
 @app.route('/')
+@app.route('/output_folder')
+
 @app.route('/home')
 def home():
     return render_template('Home.html', title="Home Page")
@@ -46,7 +48,7 @@ def tools():
 
 
 
-@app.route('/tools/fastqToFasta/', methods=['GET','POST'])
+@app.route('/tools/fastqToFasta', methods=['GET','POST'])
 
 def Fastq_to_Fasta():
     if request.method == 'POST':
@@ -105,36 +107,41 @@ def Nplots():
             plots=request.form.getlist('plot') # get a list with 1 and 0 for the plots
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('File successfully uploaded')
-            return plot_fasta(filename, window_values=window_dim, type=plots)
+            plot_fasta(filename, window_values=window_dim, type=plots)
+            return show_graphs()
         else:
             return render_template('ErrorPage.html')
 
     return render_template('Nplots.html')
 
-def get_images():
-    files=os.listdir(app.config['DOWNLOAD_FOLDER'])
-    return files
+
 
 def plot_fasta(filename, window_values, type):
     for graph_type in type:
         if graph_type=='gc':
-            MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename),\
+           MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename),\
                     filename=filename, windowsize=window_values[0], step=window_values[1],\
                     GC=True, out_dir_name=app.config['DOWNLOAD_FOLDER'])
+
         else:
-            MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename), \
+           MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename), \
                                  filename=filename, windowsize=window_values[0], step=window_values[1], \
                                  GC=False, out_dir_name=app.config['DOWNLOAD_FOLDER'])
 
-    img_ls=get_images()
 
 
-    return render_template('plot_show.html', folder=app.config['DOWNLOAD_FOLDER'], images=img_ls, title='Results')#, clean(img_ls)
+@app.route('/results/<filename>')
+def send_image(filename):
+    return send_file('./output_folder/'+filename,mimetype='image/png')
 
-def clean(img_ls):
-    for n in range(len(img_ls)): os.remove(os.path.join(app.config['DOWNLOAD_FOLDER'], img_ls[n]))
+@app.route('/results')
+def show_graphs():
+    img_list=os.listdir('./output_folder')
+    return  render_template('plot_show.html',image_names=img_list)
 
-@app.route('/tools/MultilineFasta/', methods=['GET','POST'])
+
+
+@app.route('/tools/MultilineFasta', methods=['GET','POST'])
 def MultilineFasta():
     if request.method == 'POST':
         # check if the post request has the file part

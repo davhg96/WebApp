@@ -1,6 +1,8 @@
 from matplotlib import pyplot as plt
 import os
 
+
+
 plt.style.use('ggplot')
 def parse_fasta_to_dict(FASTA_file):
 	seq_dict = {}
@@ -104,7 +106,7 @@ def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, 
 		plt.ylabel('GC%')
 		plt.legend()
 
-		return plt.savefig(os.path.join(out_dir_name, filename + '_GC.png')),plt.close()
+		return plt.savefig(os.path.join(out_dir_name, filename + '_GC.png'), format='png'),plt.close()
 	# General plot code, similar to the GC code but changes the dictionary
 	else:
 		nucleotides = 'ACTGN'  # Just so we can have everything in 1 dict
@@ -145,5 +147,5 @@ def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, 
 		plt.legend()
 
 
-		return plt.savefig(os.path.join(out_dir_name, filename + '_allN.png')),plt.close()
+		return plt.savefig(os.path.join(out_dir_name, filename + '_allN.png'), format='png'),plt.close()
 
