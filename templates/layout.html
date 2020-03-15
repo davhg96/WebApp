@@ -22,7 +22,7 @@
 <header class="site-header">
   <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
     <div class="container">
-      <a class="navbar-brand mr-4" href="/">Flask Page</a> <!--Here we change the page name-->
+      <a class="navbar-brand mr-4" href="/home">Flask project </a> <!--Here we change the page name-->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -38,7 +38,7 @@
       </div> <!--Here we add new tabs-->
     </div>
   </nav>
-</header>
+</header> <!--This Block contains the code fo rthe siite heather and the links-->
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -53,7 +53,7 @@
 <main role="main" class="container"> <!--Sidebar code-->
   <div class="row">
     <div class="col12 col-md-8">
-      {% block content %}{% endblock %}
+      {% block content %}      {% endblock %}
     </div>
     <div class="col 6 col-md-4">
     {% block side %}{% endblock %}
