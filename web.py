@@ -1,5 +1,5 @@
 
-from flask import Flask, render_template, url_for, request, flash, redirect,send_from_directory, send_file
+from flask import Flask, render_template, url_for, request, flash, redirect,send_from_directory, send_file, after_this_request
 import os
 from werkzeug.utils import secure_filename
 import MyWebTools as MWT
@@ -50,6 +50,8 @@ def tools():
 
 @app.route('/tools/fastqToFasta', methods=['GET','POST'])
 
+# this page will get the file, process, and send back to user, also will delete the inoput and outpout files inmediately after
+
 def Fastq_to_Fasta():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -87,7 +89,7 @@ def process_fastq(filename):
             os.remove(os.path.join(app.config['DOWNLOAD_FOLDER'], processed_filename))
 
 
-@app.route('/tools/Nplots/', methods=['GET','POST'])
+@app.route('/tools/Nplots/', methods=['GET','POST'])# form page
 def Nplots():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -108,7 +110,7 @@ def Nplots():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             flash('File successfully uploaded')
             plot_fasta(filename, window_values=window_dim, type=plots)
-            return show_graphs()
+            return redirect('results'), os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename)) #go to the results page and remove the inpu tfile
         else:
             return render_template('ErrorPage.html')
 
@@ -117,6 +119,13 @@ def Nplots():
 
 
 def plot_fasta(filename, window_values, type):
+    '''
+    This function takes the input from the form and sends it to th eplotting function to generate the graphs
+    :param filename: Original Filename
+    :param window_values: Windoe step and size
+    :param type: which plot the user wants, AllN/GC
+    :return: the plotting function saves the files in the downlod folder
+    '''
     for graph_type in type:
         if graph_type=='gc':
            MWT.plot_nucleotides(fastasequence=os.path.join(app.config['UPLOAD_FOLDER'], filename),\
@@ -130,15 +139,19 @@ def plot_fasta(filename, window_values, type):
 
 
 
-@app.route('/results/<filename>')
+@app.route('/results/<filename>')#This route will serve the images to the results page
 def send_image(filename):
-    return send_file('./output_folder/'+filename,mimetype='image/png')
+    send_file(app.config['DOWNLOAD_FOLDER'] + filename, mimetype='image/png')
 
-@app.route('/results')
+
+
+@app.route('/tools/Nplots/results')#Render the page and clean
 def show_graphs():
-    img_list=os.listdir('./output_folder')
-    return  render_template('plot_show.html',image_names=img_list)
-
+    img_list=os.listdir(app.config['DOWNLOAD_FOLDER'])
+    return  render_template('plot_show.html',image_names=img_list), clean(img_list)
+def clean(file_list):
+    for file in file_list:
+        os.remove(os.path.join(app.config['DOWNLOAD_FOLDER'],file))
 
 
 @app.route('/tools/MultilineFasta', methods=['GET','POST'])
