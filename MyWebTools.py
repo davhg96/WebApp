@@ -84,6 +84,7 @@ def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, 
 		while upper_window <= len(allN):  # Count the nucleotides and append them alongside the windos into de dict list
 			working_seq = allN[lower_window:upper_window]
 			nuc['GC'].append(((working_seq.count('G')+working_seq.count('C')) / (upper_window - lower_window)) * 100)
+			nuc['N'].append(working_seq.count('N'))
 			if (upper_window - step) not in nuc['midle_pos']:  # Check if the middle pso is already added,
 				# only add it if the previous is different
 				nuc['midle_pos'].append(upper_window - step)
@@ -91,11 +92,12 @@ def plot_nucleotides(fastasequence,filename, windowsize=100, step=50, GC=False, 
 			lower_window += step
 
 		working_seq = allN[lower_window:]  # Take the end if th ewindow falls over the edge
-		for Nuc in nucleotides:
-			nuc[Nuc].append((working_seq.count(Nuc) / (len(allN) - lower_window)) * 100)
-			if (lower_window + (len(working_seq) / 2)) not in nuc['midle_pos']:  # Check if the middle pso is already
-				# added, only add it if the  previous is different
-				nuc['midle_pos'].append(lower_window + (len(working_seq) / 2))
+
+		nuc['GC'].append(((working_seq.count('G')+working_seq.count('C')) / (upper_window - lower_window)) * 100)
+		nuc['N'].append(working_seq.count('N'))
+		if (lower_window + (len(working_seq) / 2)) not in nuc['midle_pos']:  # Check if the middle pso is already
+			# added, only add it if the  previous is different
+			nuc['midle_pos'].append(lower_window + (len(working_seq) / 2))
 
 		for Nuc in nucleotides:
 			if not any(nuc[Nuc]) == 0:  # Check if there are values, if not ignore that nucleotide

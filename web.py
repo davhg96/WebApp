@@ -141,7 +141,7 @@ def plot_fasta(filename, window_values, type):
 
 @app.route('/results/<filename>')#This route will serve the images to the results page
 def send_image(filename):
-    send_file(app.config['DOWNLOAD_FOLDER'] + filename, mimetype='image/png')
+    return send_file(app.config['DOWNLOAD_FOLDER'] +'/'+ filename, mimetype='image/png')
 
 
 
@@ -151,7 +151,7 @@ def show_graphs():
     return  render_template('plot_show.html',image_names=img_list), clean(img_list)
 def clean(file_list):
     for file in file_list:
-        os.remove(os.path.join(app.config['DOWNLOAD_FOLDER'],file))
+        return os.remove(os.path.join(app.config['DOWNLOAD_FOLDER'],file))
 
 
 @app.route('/tools/MultilineFasta', methods=['GET','POST'])
