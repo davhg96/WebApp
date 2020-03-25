@@ -1,7 +1,8 @@
 #### **Description**
 This is an in development web application designed to perform basic bioinformatics tasks.
+
 The users can upload their files and perform file transformations such as mutate multiline fasta files into 
-oneline fasta files, transform fastq files into fasta files or plot the nucleotide abundance across the input file
+oneline fasta files, transform fastq files into fasta files or plot the nucleotide abundance across the input file.
 
 
 #### **Usage:**

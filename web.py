@@ -24,7 +24,7 @@ ALLOWED_EXTENSIONS_FASTA={'fasta','fna','fa'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 app.config['DOWNLOAD_FOLDER']=DOWNLOAD_FOLDER
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024 # max file size set to 10 MB
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024 # max file size set to 10 Mb
 app.secret_key='hdsgfhdgashjfgjasdk'
 
 def allowed_file(filename, fasta=True): # Check if the extension is correct
